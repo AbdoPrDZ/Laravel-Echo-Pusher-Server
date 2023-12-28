@@ -15,46 +15,28 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
  * allows your team to easily build robust real-time web applications.
  */
 
-// import Echo from 'laravel-echo';
-
-// import Pusher from 'pusher-js';
-// window.Pusher = Pusher;
-
-// window.Echo = new Echo({
-//     broadcaster: 'pusher',
-//     key: import.meta.env.VITE_PUSHER_APP_KEY,
-//     cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
-//     wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
-//     wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
-//     wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
-//     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
-//     enabledTransports: ['ws', 'wss'],
-// });
-
 import Echo from 'laravel-echo';
-import io from 'socket.io-client';
+import Pusher from 'pusher-js';
 
-window.io = io;
+window.Pusher = Pusher;
 
 window.Echo = new Echo({
-    client: io,
-    broadcaster: 'socket.io',
-    host: window.location.hostname + ":6001",
-    logToConsole: true,
-    transports: ['websocket'],
-    auth: {
-        headers: {
-            'Authorization': 'Bearer 2|9xjc76eOWsJ459sws1W5yl47VoJ8UjFOtkltjPNGf0752ef7'
-        }
+  broadcaster: 'pusher',
+  key: import.meta.env.VITE_PUSHER_APP_KEY,
+  cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER ?? 'mt1',
+  wsHost: import.meta.env.VITE_PUSHER_HOST ? import.meta.env.VITE_PUSHER_HOST : `ws-${import.meta.env.VITE_PUSHER_APP_CLUSTER}.pusher.com`,
+  wsPort: import.meta.env.VITE_PUSHER_PORT ?? 80,
+  wssPort: import.meta.env.VITE_PUSHER_PORT ?? 443,
+  forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? 'https') === 'https',
+  enabledTransports: ['ws', 'wss'],
+  logToConsole: true,
+  auth: {
+    headers: {
+      // TODO: add your token
+      'Authorization': 'Bearer 2|9xjc76eOWsJ459sws1W5yl47VoJ8UjFOtkltjPNGf0752ef7'
     }
+  }
 });
-window.onevent = window.Echo.connector.socket.onevent;
-window.Echo.connector.socket.onevent = function(...args) {
-    console.log('event', 'args', args);
-    window.onevent.call(this, ...args);
-    packet.data = ["*"].concat(args);
-    window.onevent.call(this, ...args);
-}
 
 window.Echo.connector.socket.onAny((...args) => {
     console.log('event', 'args', args);
